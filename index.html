@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migration Planning Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 25px;
+            height: 15px;
+            overflow: hidden;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #86BC25, #6FA01F);
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #333;
+            z-index: 1;
+            font-size: 0.8rem;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .phase-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .phase-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .pre-cutover .phase-title {
+            color: #86BC25;
+        }
+
+        .during-cutover .phase-title {
+            color: #2C2C2C;
+        }
+
+        .phase-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-task-btn, .add-milestone-btn, .add-note-btn {
+            background: linear-gradient(45deg, #86BC25, #6FA01F);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(134,188,37,0.3);
+        }
+
+        .add-milestone-btn {
+            background: linear-gradient(45deg, #2C2C2C, #1A1A1A);
+            box-shadow: 0 4px 15px rgba(44,44,44,0.3);
+        }
+
+        .add-note-btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+        }
+
+        .add-task-btn:hover, .add-milestone-btn:hover, .add-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(134,188,37,0.4);
+        }
+
+        .notes-section {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #212529;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(108,117,125,0.3);
+    border: 2px solid #dee2e6;
+}
+
+.note-item {
+    background: rgba(255,255,255,0.9);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-left: 4px solid #6c757d;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.note-content {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.note-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #212529;
+}
+
+.note-text {
+    opacity: 0.8;
+    line-height: 1.4;
+    color: #495057;
+}
+
+.note-timestamp {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 8px;
+    color: #6c757d;
+}
+
+
+        .notes-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            min-width: 150px;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #86BC25;
+        }
+
+        .clear-filters-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .clear-filters-btn:hover {
+            background: #545b62;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .tasks-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .timeline-section {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #86BC25;
+        }
+
+        .timeline-section h3 {
+            color: #86BC25;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .timeline-visual {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #dee2e6;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-date {
+            width: 60px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin: 0 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-dot.milestone {
+            background: #86BC25;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #86BC25, 0 2px 8px rgba(134,188,37,0.3);
+            width: 20px;
+            height: 20px;
+        }
+
+        .timeline-dot.task-completed {
+            background: #28a745;
+        }
+
+        .timeline-dot.task-progress {
+            background: #ffc107;
+        }
+
+        .timeline-dot.task-not-started {
+            background: #6c757d;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid transparent;
+        }
+
+        .timeline-content.milestone-content {
+            background: linear-gradient(135deg, #86BC25, #6FA01F);
+            color: white;
+            border-left: 4px solid #6FA01F;
+            font-weight: bold;
+        }
+
+        .milestones-highlight {
+            background: linear-gradient(135deg, #86BC25, #6FA01F);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(134,188,37,0.3);
+        }
+
+        .milestones-highlight h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .milestone-item {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .milestone-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .milestone-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .milestone-datetime {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .milestone-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .task-item {
+            background: #ffffff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .task-item.completed {
+            opacity: 0.8;
+            border-left-color: #28a745;
+        }
+
+        .task-item.in-progress {
+            border-left-color: #ffc107;
+        }
+
+        .task-item.not-started {
+            border-left-color: #6c757d;
+        }
+
+        .task-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .task-header:hover {
+            background: #f1f3f4;
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        .task-meta {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .task-assignee {
+            background: #e9ecef;
+            color: #495057;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .task-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .task-icon-btn {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: none;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .task-icon-btn.edit:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .task-icon-btn.delete:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-not-started {
+            background: #8d8b8b;
+            color: #ffffff;
+        }
+
+        .task-details {
+            padding: 20px;
+            background: #f8f9fa;
+            display: none;
+        }
+
+        .task-details.expanded {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subtask {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            group: 1;
+        }
+
+        .subtask:last-child {
+            border-bottom: none;
+        }
+
+        .subtask-checkbox {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .subtask-text {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .subtask-assignee {
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #495057;
+            margin-right: 10px;
+        }
+
+        .subtask-delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .subtask-delete-btn:hover {
+            background: #c82333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 50px auto;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-input, .form-textarea, .form-select, .form-datetime {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus, .form-datetime:focus {
+            outline: none;
+            border-color: #86BC25;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #86BC25, #6FA01F);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(134,188,37,0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .subtask-list {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .subtask-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .subtask-input {
+            flex: 1;
+        }
+
+        .assignee-input {
+            width: 200px;
+        }
+
+        .add-subtask-btn {
+            background: #86BC25;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .no-results-message {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline-container {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .phase-actions {
+                flex-direction: column;
+            }
+
+            .task-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Final Cutover Plan</h1>
+        </div>
+
+        <div class="timeline-container">
+            <!-- Pre-Cutover Section -->
+            <div class="phase-section pre-cutover">
+                <div class="phase-header">
+                    <h2 class="phase-title">Pre-Cutover Planning</h2>
+                    <div class="phase-actions">
+                        <button class="add-task-btn" onclick="openAddTaskModal('pre-cutover')">+ Add Task</button>
+                        <button class="add-note-btn" onclick="openAddNoteModal('pre-cutover')">+ Add Note</button>
+                    </div>
+                </div>
+
+                <!-- Important Notes Section -->
+                <div class="notes-section" id="pre-cutover-notes-section" style="display: none;">
+                    <h3>Important Notes <span id="pre-cutover-notes-count">0</span></h3>
+                    <div id="pre-cutover-notes-container">
+                        <!-- Notes will be displayed here -->
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Status:</label>
+                        <select class="filter-select" id="pre-cutover-status-filter" onchange="applyFilters('pre-cutover')">
+                            <option value="">All Statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="not-started">Not Started</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Assignee:</label>
+                        <select class="filter-select" id="pre-cutover-assignee-filter" onchange="applyFilters('pre-cutover')">
+                            <option value="">All Assignees</option>
+                        </select>
+                    </div>
+                    <button class="clear-filters-btn" onclick="clearFilters('pre-cutover')">Clear Filters</button>
+                </div>
+
+                <div class="progress-section">
+                    <h4>Pre-Cutover Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="preCutoverProgress" style="width: 0%"></div>
+                        <div class="progress-text" id="preCutoverProgressText">0% Complete</div>
+                    </div>
+                    <div class="progress-stats">
+                        <div><strong>Total:</strong> <span id="preCutoverTotalTasks">0</span></div>
+                        <div><strong>Completed:</strong> <span id="preCutoverCompletedTasks">0</span></div>
+                        <div><strong>Remaining:</strong> <span id="preCutoverRemainingTasks">0</span></div>
+                    </div>
+                </div>
+                
+                <div class="content-wrapper">
+                    <div class="tasks-section">
+                        <h3>Tasks</h3>
+                        <div id="pre-cutover-tasks" class="tasks-container">
+                            <!-- Tasks will be dynamically loaded here -->
+                        </div>
+                    </div>
+                    <div class="timeline-section">
+                        <h3>Timeline View</h3>
+                        <div class="timeline-visual" id="pre-cutover-timeline">
+                            <div class="timeline-line"></div>
+                            <!-- Timeline items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- During Cutover Section -->
+            <div class="phase-section during-cutover">
+                <div class="phase-header">
+                    <h2 class="phase-title">During Cutover Execution</h2>
+                    <div class="phase-actions">
+                        <button class="add-task-btn" onclick="openAddTaskModal('during-cutover')">+ Add Task</button>
+                        <button class="add-milestone-btn" onclick="openAddMilestoneModal()">+ Add Milestone</button>
+                        <button class="add-note-btn" onclick="openAddNoteModal('during-cutover')">+ Add Note</button>
+                    </div>
+                </div>
+
+                <!-- Important Notes Section -->
+                <div class="notes-section" id="during-cutover-notes-section" style="display: none;">
+                    <h3>Important Notes <span id="during-cutover-notes-count">0</span></h3>
+                    <div id="during-cutover-notes-container">
+                        <!-- Notes will be displayed here -->
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Status:</label>
+                        <select class="filter-select" id="during-cutover-status-filter" onchange="applyFilters('during-cutover')">
+                            <option value="">All Statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="not-started">Not Started</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Assignee:</label>
+                        <select class="filter-select" id="during-cutover-assignee-filter" onchange="applyFilters('during-cutover')">
+                            <option value="">All Assignees</option>
+                        </select>
+                    </div>
+                    <button class="clear-filters-btn" onclick="clearFilters('during-cutover')">Clear Filters</button>
+                </div>
+
+                <div class="progress-section">
+                    <h4>During Cutover Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="duringCutoverProgress" style="width: 0%"></div>
+                        <div class="progress-text" id="duringCutoverProgressText">0% Complete</div>
+                    </div>
+                    <div class="progress-stats">
+                        <div><strong>Total:</strong> <span id="duringCutoverTotalTasks">0</span></div>
+                        <div><strong>Completed:</strong> <span id="duringCutoverCompletedTasks">0</span></div>
+                        <div><strong>Remaining:</strong> <span id="duringCutoverRemainingTasks">0</span></div>
+                    </div>
+                </div>
+
+                <div class="milestones-highlight">
+                    <h3>Critical Milestones</h3>
+                    <div id="milestones-container">
+                        <!-- Milestones will be displayed here -->
+                    </div>
+                </div>
+                
+                <div class="content-wrapper">
+                    <div class="tasks-section">
+                        <h3>Tasks</h3>
+                        <div id="during-cutover-tasks" class="tasks-container">
+                            <!-- Tasks will be dynamically loaded here -->
+                        </div>
+                    </div>
+                    <div class="timeline-section">
+                        <h3>Timeline View</h3>
+                        <div class="timeline-visual" id="during-cutover-timeline">
+                            <div class="timeline-line"></div>
+                            <!-- Timeline items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('addTaskModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="taskModalTitle">Add New Task</h2>
+            </div>
+            <form id="addTaskForm">
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" id="taskTitle" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="taskDescription" class="form-textarea" placeholder="Detailed description of the task"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Main Assignee</label>
+                    <input type="text" id="taskAssignee" class="form-input" placeholder="Who is responsible for this task">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select id="taskPriority" class="form-select">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Due Date & Time</label>
+                    <input type="datetime-local" id="taskDueDate" class="form-datetime">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Subtasks</label>
+                    <div class="subtask-list" id="subtaskList">
+                        <div class="subtask-input-group">
+                            <input type="text" class="form-input subtask-input" placeholder="Subtask description">
+                            <input type="text" class="form-input assignee-input" placeholder="Assignee (optional)">
+                            <button type="button" class="add-subtask-btn" onclick="addSubtaskToForm()">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addTaskModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="taskSubmitBtn">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Milestone Modal -->
+    <div id="addMilestoneModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('addMilestoneModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="milestoneModalTitle">Add New Milestone</h2>
+            </div>
+            <form id="addMilestoneForm">
+                <div class="form-group">
+                    <label class="form-label">Milestone Title</label>
+                    <input type="text" id="milestoneTitle" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="milestoneDescription" class="form-textarea" placeholder="Description of this milestone"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date & Time</label>
+                    <input type="datetime-local" id="milestoneDate" class="form-datetime" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <select id="milestoneType" class="form-select">
+                        <option value="freeze">Freeze Date</option>
+                        <option value="deadline">Deadline</option>
+                        <option value="checkpoint">Checkpoint</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMilestoneModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="milestoneSubmitBtn">Create Milestone</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Note Modal -->
+    <div id="addNoteModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('addNoteModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="noteModalTitle">Add Important Note</h2>
+            </div>
+            <form id="addNoteForm">
+                <div class="form-group">
+                    <label class="form-label">Note Title</label>
+                    <input type="text" id="noteTitle" class="form-input" required placeholder="Brief title for the note">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Note Content</label>
+                    <textarea id="noteContent" class="form-textarea" required placeholder="Important information to highlight..."></textarea>
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addNoteModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="noteSubmitBtn">Create Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqrTCPpCXpLAadzelzJ-dWLH0FNumKPe4",
+            authDomain: "finalcutover-fa89c.firebaseapp.com",
+            projectId: "finalcutover-fa89c",
+            storageBucket: "finalcutover-fa89c.firebasestorage.app",
+            messagingSenderId: "23274905325",
+            appId: "1:23274905325:web:e3a7d39dc7c30a432176e4",
+            measurementId: "G-X0M1FDFTMC"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // Application state
+        let currentPhase = '';
+        let currentNotePhase = '';
+        let editingTaskId = null;
+        let editingMilestoneId = null;
+        let editingNoteId = null;
+        let tasks = {
+            'pre-cutover': [],
+            'during-cutover': []
+        };
+        let filteredTasks = {
+            'pre-cutover': [],
+            'during-cutover': []
+        };
+        let milestones = [];
+        let notes = {
+            'pre-cutover': [],
+            'during-cutover': []
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTasks();
+            loadMilestones();
+            loadNotes();
+        });
+
+        // Load tasks from Firebase
+        async function loadTasks() {
+            try {
+                const snapshot = await db.collection('migrationTasks').get();
+                tasks = {
+                    'pre-cutover': [],
+                    'during-cutover': []
+                };
+
+                snapshot.forEach(doc => {
+                    const task = { id: doc.id, ...doc.data() };
+                    tasks[task.phase].push(task);
+                });
+
+                resetFilters();
+                populateAssigneeFilters();
+                renderTasks();
+                renderTimelines();
+                updateProgress();
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                loadSampleData();
+            }
+        }
+
+        // Load milestones from Firebase
+        async function loadMilestones() {
+            try {
+                const snapshot = await db.collection('migrationMilestones').get();
+                milestones = [];
+
+                snapshot.forEach(doc => {
+                    const milestone = { id: doc.id, ...doc.data() };
+                    milestones.push(milestone);
+                });
+
+                renderMilestones();
+                renderTimelines();
+            } catch (error) {
+                console.error('Error loading milestones:', error);
+                loadSampleMilestones();
+            }
+        }
+
+        // Load notes from Firebase
+        async function loadNotes() {
+            try {
+                const snapshot = await db.collection('migrationNotes').get();
+                notes = {
+                    'pre-cutover': [],
+                    'during-cutover': []
+                };
+
+                snapshot.forEach(doc => {
+                    const note = { id: doc.id, ...doc.data() };
+                    notes[note.phase].push(note);
+                });
+
+                renderNotes();
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                // Notes are optional, so no sample data needed
+            }
+        }
+
+        // Save task to Firebase
+        async function saveTask(task) {
+            try {
+                if (task.id && task.id !== 'new') {
+                    await db.collection('migrationTasks').doc(task.id).update(task);
+                } else {
+                    const docRef = await db.collection('migrationTasks').add(task);
+                    task.id = docRef.id;
+                }
+                return true;
+            } catch (error) {
+                console.error('Error saving task:', error);
+                return false;
+            }
+        }
+
+        // Save milestone to Firebase
+        async function saveMilestone(milestone) {
+            try {
+                if (milestone.id && milestone.id !== 'new') {
+                    await db.collection('migrationMilestones').doc(milestone.id).update(milestone);
+                } else {
+                    const docRef = await db.collection('migrationMilestones').add(milestone);
+                    milestone.id = docRef.id;
+                }
+                return true;
+            } catch (error) {
+                console.error('Error saving milestone:', error);
+                return false;
+            }
+        }
+
+        // Save note to Firebase
+        async function saveNote(note) {
+            try {
+                if (note.id && note.id !== 'new') {
+                    await db.collection('migrationNotes').doc(note.id).update(note);
+                } else {
+                    const docRef = await db.collection('migrationNotes').add(note);
+                    note.id = docRef.id;
+                }
+                return true;
+            } catch (error) {
+                console.error('Error saving note:', error);
+                return false;
+            }
+        }
+
+        // Delete functions
+        async function deleteTaskFromFirebase(taskId) {
+            try {
+                await db.collection('migrationTasks').doc(taskId).delete();
+                return true;
+            } catch (error) {
+                console.error('Error deleting task:', error);
+                return false;
+            }
+        }
+
+        async function deleteMilestoneFromFirebase(milestoneId) {
+            try {
+                await db.collection('migrationMilestones').doc(milestoneId).delete();
+                return true;
+            } catch (error) {
+                console.error('Error deleting milestone:', error);
+                return false;
+            }
+        }
+
+        async function deleteNoteFromFirebase(noteId) {
+            try {
+                await db.collection('migrationNotes').doc(noteId).delete();
+                return true;
+            } catch (error) {
+                console.error('Error deleting note:', error);
+                return false;
+            }
+        }
+
+        // Load sample data for demonstration
+        function loadSampleData() {
+            tasks = {
+                'pre-cutover': [
+                    {
+                        id: '1',
+                        title: 'Environment Setup',
+                        description: 'Prepare production and staging environments',
+                        phase: 'pre-cutover',
+                        priority: 'high',
+                        assignee: 'John Doe',
+                        dueDate: '2025-07-15T09:00',
+                        status: 'completed',
+                        subtasks: [
+                            { text: 'Configure servers', assignee: 'John Doe', completed: true },
+                            { text: 'Setup databases', assignee: 'Jane Smith', completed: true },
+                            { text: 'Network configuration', assignee: '', completed: false }
+                        ]
+                    },
+                    {
+                        id: '2',
+                        title: 'Data Backup',
+                        description: 'Complete backup of all critical data',
+                        phase: 'pre-cutover',
+                        priority: 'high',
+                        assignee: 'Sarah Wilson',
+                        dueDate: '2025-07-20T14:00',
+                        status: 'in-progress',
+                        subtasks: [
+                            { text: 'Database backup', assignee: 'Sarah Wilson', completed: true },
+                            { text: 'File system backup', assignee: '', completed: false }
+                        ]
+                    }
+                ],
+                'during-cutover': [
+                    {
+                        id: '3',
+                        title: 'DNS Switch',
+                        description: 'Update DNS records to point to new servers',
+                        phase: 'during-cutover',
+                        priority: 'high',
+                        assignee: 'Alex Green',
+                        dueDate: '2025-07-25T16:00',
+                        status: 'not-started',
+                        subtasks: [
+                            { text: 'Update A records', assignee: '', completed: false },
+                            { text: 'Verify propagation', assignee: 'Lisa White', completed: false }
+                        ]
+                    }
+                ]
+            };
+            resetFilters();
+            populateAssigneeFilters();
+            renderTasks();
+            renderTimelines();
+            updateProgress();
+        }
+
+        // Load sample milestones for demonstration
+        function loadSampleMilestones() {
+            milestones = [
+                {
+                    id: '1',
+                    title: 'Job Freeze Date',
+                    description: 'All new jobs must be frozen',
+                    date: '2025-07-22T17:00',
+                    type: 'freeze'
+                },
+                {
+                    id: '2',
+                    title: 'Invoice Freeze Date',
+                    description: 'All invoicing processes must be completed',
+                    date: '2025-07-24T12:00',
+                    type: 'freeze'
+                }
+            ];
+            renderMilestones();
+            renderTimelines();
+        }
+
+        // Filtering functions
+        function populateAssigneeFilters() {
+            const allAssignees = new Set();
+            
+            ['pre-cutover', 'during-cutover'].forEach(phase => {
+                tasks[phase].forEach(task => {
+                    if (task.assignee) allAssignees.add(task.assignee);
+                    task.subtasks.forEach(subtask => {
+                        if (subtask.assignee) allAssignees.add(subtask.assignee);
+                    });
+                });
+            });
+
+            ['pre-cutover', 'during-cutover'].forEach(phase => {
+                const select = document.getElementById(`${phase}-assignee-filter`);
+                select.innerHTML = '<option value="">All Assignees</option>';
+                
+                Array.from(allAssignees).sort().forEach(assignee => {
+                    const option = document.createElement('option');
+                    option.value = assignee;
+                    option.textContent = assignee;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function applyFilters(phase) {
+            const statusFilter = document.getElementById(`${phase}-status-filter`).value;
+            const assigneeFilter = document.getElementById(`${phase}-assignee-filter`).value;
+
+            filteredTasks[phase] = tasks[phase].filter(task => {
+                const statusMatch = !statusFilter || task.status === statusFilter;
+                const assigneeMatch = !assigneeFilter || 
+                    task.assignee === assigneeFilter ||
+                    task.subtasks.some(subtask => subtask.assignee === assigneeFilter);
+                
+                return statusMatch && assigneeMatch;
+            });
+
+            renderFilteredTasks(phase);
+            updateProgress();
+        }
+
+        function clearFilters(phase) {
+            document.getElementById(`${phase}-status-filter`).value = '';
+            document.getElementById(`${phase}-assignee-filter`).value = '';
+            filteredTasks[phase] = tasks[phase];
+            renderFilteredTasks(phase);
+            updateProgress();
+        }
+
+        function resetFilters() {
+            filteredTasks['pre-cutover'] = tasks['pre-cutover'];
+            filteredTasks['during-cutover'] = tasks['during-cutover'];
+        }
+
+        // Render functions
+        function renderTasks() {
+            resetFilters();
+            renderFilteredTasks('pre-cutover');
+            renderFilteredTasks('during-cutover');
+        }
+
+        function renderFilteredTasks(phase) {
+            const container = document.getElementById(`${phase}-tasks`);
+            container.innerHTML = '';
+
+            if (filteredTasks[phase].length === 0) {
+                container.innerHTML = '<div class="no-results-message">No tasks match the current filters</div>';
+                return;
+            }
+
+            filteredTasks[phase].forEach(task => {
+                container.appendChild(createTaskElement(task));
+            });
+        }
+
+        function renderNotes() {
+            ['pre-cutover', 'during-cutover'].forEach(phase => {
+                const notesSection = document.getElementById(`${phase}-notes-section`);
+                const notesContainer = document.getElementById(`${phase}-notes-container`);
+                const notesCount = document.getElementById(`${phase}-notes-count`);
+
+                notesContainer.innerHTML = '';
+                
+                if (notes[phase].length === 0) {
+                    notesSection.style.display = 'none';
+                    return;
+                }
+
+                notesSection.style.display = 'block';
+                notesCount.textContent = `(${notes[phase].length})`;
+
+                notes[phase].forEach(note => {
+                    const noteElement = document.createElement('div');
+                    noteElement.className = 'note-item';
+                    noteElement.innerHTML = `
+                        <div class="note-content">
+                            <div class="note-title">${note.title}</div>
+                            <div class="note-text">${note.content}</div>
+                            <div class="note-timestamp">Added ${formatDateTime(note.timestamp)}</div>
+                        </div>
+                        <div class="note-actions">
+                            <button class="icon-btn" onclick="editNote('${note.id}')" title="Edit">✏️</button>
+                            <button class="icon-btn" onclick="deleteNote('${note.id}')" title="Delete">🗑️</button>
+                        </div>
+                    `;
+                    notesContainer.appendChild(noteElement);
+                });
+            });
+        }
+
+        function renderMilestones() {
+            const milestonesContainer = document.getElementById('milestones-container');
+            milestonesContainer.innerHTML = '';
+
+            if (milestones.length === 0) {
+                milestonesContainer.innerHTML = '<p style="text-align: center; opacity: 0.7;">No milestones added yet</p>';
+                return;
+            }
+
+            milestones.forEach(milestone => {
+                const milestoneElement = document.createElement('div');
+                milestoneElement.className = 'milestone-item';
+                milestoneElement.innerHTML = `
+                    <div>
+                        <div class="milestone-title">${milestone.title}</div>
+                        <div class="milestone-datetime">${formatDateTime(milestone.date)}</div>
+                    </div>
+                    <div class="milestone-actions">
+                        <button class="icon-btn" onclick="editMilestone('${milestone.id}')" title="Edit">✏️</button>
+                        <button class="icon-btn" onclick="deleteMilestone('${milestone.id}')" title="Delete">🗑️</button>
+                    </div>
+                `;
+                milestonesContainer.appendChild(milestoneElement);
+            });
+        }
+
+        // Render timelines
+        function renderTimelines() {
+            renderTimelineForPhase('pre-cutover');
+            renderTimelineForPhase('during-cutover');
+        }
+
+        function renderTimelineForPhase(phase) {
+            const timelineContainer = document.getElementById(`${phase}-timeline`);
+            const items = [];
+
+            // Add tasks (use filtered tasks for timeline)
+            filteredTasks[phase].forEach(task => {
+                items.push({
+                    date: task.dueDate,
+                    title: task.title,
+                    type: 'task',
+                    status: task.status,
+                    assignee: task.assignee
+                });
+            });
+
+            // Add milestones for during-cutover
+            if (phase === 'during-cutover') {
+                milestones.forEach(milestone => {
+                    items.push({
+                        date: milestone.date,
+                        title: milestone.title,
+                        type: 'milestone',
+                        milestoneType: milestone.type
+                    });
+                });
+            }
+
+            // Sort by date
+            items.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Clear and populate timeline
+            timelineContainer.innerHTML = '<div class="timeline-line"></div>';
+
+            if (items.length === 0) {
+                const emptyMessage = document.createElement('p');
+                emptyMessage.textContent = 'No items to display in timeline';
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.color = '#6c757d';
+                emptyMessage.style.marginTop = '20px';
+                timelineContainer.appendChild(emptyMessage);
+                return;
+            }
+
+            items.forEach(item => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+
+                let dotClass = '';
+                let contentClass = '';
+                if (item.type === 'milestone') {
+                    dotClass = 'milestone';
+                    contentClass = 'milestone-content';
+                } else {
+                    dotClass = `task-${item.status.replace('-', '')}`;
+                }
+
+                timelineItem.innerHTML = `
+                    <div class="timeline-date">${formatDateShort(item.date)}</div>
+                    <div class="timeline-dot ${dotClass}"></div>
+                    <div class="timeline-content ${contentClass}">
+                        <strong>${item.title}</strong>
+                        ${item.assignee ? `<br><small>Assigned to: ${item.assignee}</small>` : ''}
+                        ${item.type === 'milestone' ? `<br><small>Milestone: ${item.milestoneType}</small>` : ''}
+                        <br><small>${formatTime(item.date)}</small>
+                    </div>
+                `;
+
+                timelineContainer.appendChild(timelineItem);
+            });
+        }
+
+        // Create task element
+        function createTaskElement(task) {
+            const taskItem = document.createElement('div');
+            taskItem.className = `task-item ${task.status}`;
+            
+            const completedSubtasks = task.subtasks.filter(st => st.completed).length;
+            const totalSubtasks = task.subtasks.length;
+            const taskProgress = totalSubtasks > 0 ? Math.round((completedSubtasks / totalSubtasks) * 100) : 0;
+
+            taskItem.innerHTML = `
+                <div class="task-header" onclick="toggleTaskDetails('${task.id}')">
+                    <div class="task-info">
+                        <div class="task-title">
+                            ${task.title}
+                            ${task.assignee ? `<span class="task-assignee">${task.assignee}</span>` : ''}
+                        </div>
+                        <div class="task-meta">
+                            Due: ${formatDateTime(task.dueDate)} | Progress: ${taskProgress}% (${completedSubtasks}/${totalSubtasks})
+                        </div>
+                    </div>
+                    <div class="task-status">
+                        <div class="task-actions">
+                            <button class="task-icon-btn edit" onclick="event.stopPropagation(); editTask('${task.id}')" title="Edit">✏️</button>
+                            <button class="task-icon-btn delete" onclick="event.stopPropagation(); deleteTask('${task.id}')" title="Delete">🗑️</button>
+                        </div>
+                        <span class="status-badge status-${task.status}">${task.status.replace('-', ' ')}</span>
+                        <span class="expand-icon" id="icon-${task.id}">▼</span>
+                    </div>
+                </div>
+                <div class="task-details" id="details-${task.id}">
+                    <p><strong>Description:</strong> ${task.description}</p>
+                    <p><strong>Priority:</strong> ${task.priority}</p>
+                    <hr style="margin: 15px 0;">
+                    <h4>Subtasks:</h4>
+                    ${task.subtasks.map((subtask, index) => `
+                        <div class="subtask">
+                            <input type="checkbox" class="subtask-checkbox" 
+                                   ${subtask.completed ? 'checked' : ''} 
+                                   onchange="toggleSubtask('${task.id}', ${index})">
+                            <span class="subtask-text ${subtask.completed ? 'completed' : ''}">${subtask.text}</span>
+                            <span class="subtask-assignee">${subtask.assignee || task.assignee || 'Unassigned'}</span>
+                            <button class="subtask-delete-btn" onclick="deleteSubtask('${task.id}', ${index})">✕</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            return taskItem;
+        }
+
+        // Toggle task details
+        function toggleTaskDetails(taskId) {
+            const details = document.getElementById(`details-${taskId}`);
+            const icon = document.getElementById(`icon-${taskId}`);
+            
+            if (details.classList.contains('expanded')) {
+                details.classList.remove('expanded');
+                icon.classList.remove('rotated');
+            } else {
+                details.classList.add('expanded');
+                icon.classList.add('rotated');
+            }
+        }
+
+        // Toggle subtask completion
+        async function toggleSubtask(taskId, subtaskIndex) {
+            let task = tasks['pre-cutover'].find(t => t.id === taskId) || 
+                      tasks['during-cutover'].find(t => t.id === taskId);
+            
+            if (task) {
+                task.subtasks[subtaskIndex].completed = !task.subtasks[subtaskIndex].completed;
+                
+                // Update task status based on subtask completion
+                const completedSubtasks = task.subtasks.filter(st => st.completed).length;
+                const totalSubtasks = task.subtasks.length;
+                
+                if (completedSubtasks === totalSubtasks) {
+                    task.status = 'completed';
+                } else if (completedSubtasks > 0) {
+                    task.status = 'in-progress';
+                } else {
+                    task.status = 'not-started';
+                }
+
+                // Save to Firebase
+                await saveTask(task);
+
+                applyCurrentFiltersAndRender();
+            }
+        }
+
+        // Delete subtask
+        async function deleteSubtask(taskId, subtaskIndex) {
+            if (confirm('Are you sure you want to delete this subtask?')) {
+                let task = tasks['pre-cutover'].find(t => t.id === taskId) || 
+                          tasks['during-cutover'].find(t => t.id === taskId);
+                
+                if (task) {
+                    task.subtasks.splice(subtaskIndex, 1);
+                    
+                    // Update task status based on remaining subtasks
+                    const completedSubtasks = task.subtasks.filter(st => st.completed).length;
+                    const totalSubtasks = task.subtasks.length;
+                    
+                    if (totalSubtasks === 0) {
+                        task.status = 'not-started';
+                    } else if (completedSubtasks === totalSubtasks) {
+                        task.status = 'completed';
+                    } else if (completedSubtasks > 0) {
+                        task.status = 'in-progress';
+                    } else {
+                        task.status = 'not-started';
+                    }
+
+                    // Save to Firebase
+                    await saveTask(task);
+
+                    applyCurrentFiltersAndRender();
+                }
+            }
+        }
+
+        function applyCurrentFiltersAndRender() {
+            applyFilters('pre-cutover');
+            applyFilters('during-cutover');
+            renderTimelines();
+            updateProgress();
+        }
+
+        // Update progress indicators
+        function updateProgress() {
+            // Pre-cutover progress (use filtered tasks for accurate progress display)
+            const preCutoverTasks = filteredTasks['pre-cutover'];
+            const preCutoverTotal = preCutoverTasks.length;
+            const preCutoverCompleted = preCutoverTasks.filter(task => task.status === 'completed').length;
+            const preCutoverRemaining = preCutoverTotal - preCutoverCompleted;
+            const preCutoverPercentage = preCutoverTotal > 0 ? Math.round((preCutoverCompleted / preCutoverTotal) * 100) : 0;
+
+            document.getElementById('preCutoverTotalTasks').textContent = preCutoverTotal;
+            document.getElementById('preCutoverCompletedTasks').textContent = preCutoverCompleted;
+            document.getElementById('preCutoverRemainingTasks').textContent = preCutoverRemaining;
+            document.getElementById('preCutoverProgress').style.width = preCutoverPercentage + '%';
+            document.getElementById('preCutoverProgressText').textContent = preCutoverPercentage + '%';
+
+            // During cutover progress (use filtered tasks for accurate progress display)
+            const duringCutoverTasks = filteredTasks['during-cutover'];
+            const duringCutoverTotal = duringCutoverTasks.length;
+            const duringCutoverCompleted = duringCutoverTasks.filter(task => task.status === 'completed').length;
+            const duringCutoverRemaining = duringCutoverTotal - duringCutoverCompleted;
+            const duringCutoverPercentage = duringCutoverTotal > 0 ? Math.round((duringCutoverCompleted / duringCutoverTotal) * 100) : 0;
+
+            document.getElementById('duringCutoverTotalTasks').textContent = duringCutoverTotal;
+            document.getElementById('duringCutoverCompletedTasks').textContent = duringCutoverCompleted;
+            document.getElementById('duringCutoverRemainingTasks').textContent = duringCutoverRemaining;
+            document.getElementById('duringCutoverProgress').style.width = duringCutoverPercentage + '%';
+            document.getElementById('duringCutoverProgressText').textContent = duringCutoverPercentage + '%';
+        }
+
+        // Modal functions
+        function openAddTaskModal(phase) {
+            currentPhase = phase;
+            editingTaskId = null;
+            document.getElementById('taskModalTitle').textContent = 'Add New Task';
+            document.getElementById('taskSubmitBtn').textContent = 'Create Task';
+            document.getElementById('addTaskModal').style.display = 'block';
+        }
+
+        function openAddMilestoneModal() {
+            editingMilestoneId = null;
+            document.getElementById('milestoneModalTitle').textContent = 'Add New Milestone';
+            document.getElementById('milestoneSubmitBtn').textContent = 'Create Milestone';
+            document.getElementById('addMilestoneModal').style.display = 'block';
+        }
+
+        function openAddNoteModal(phase) {
+            currentNotePhase = phase;
+            editingNoteId = null;
+            document.getElementById('noteModalTitle').textContent = 'Add Important Note';
+            document.getElementById('noteSubmitBtn').textContent = 'Create Note';
+            document.getElementById('addNoteModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'addTaskModal') {
+                document.getElementById('addTaskForm').reset();
+                resetSubtaskList();
+            } else if (modalId === 'addMilestoneModal') {
+                document.getElementById('addMilestoneForm').reset();
+            } else if (modalId === 'addNoteModal') {
+                document.getElementById('addNoteForm').reset();
+            }
+        }
+
+        function resetSubtaskList() {
+            document.getElementById('subtaskList').innerHTML = `
+                <div class="subtask-input-group">
+                    <input type="text" class="form-input subtask-input" placeholder="Subtask description">
+                    <input type="text" class="form-input assignee-input" placeholder="Assignee (optional)">
+                    <button type="button" class="add-subtask-btn" onclick="addSubtaskToForm()">Add</button>
+                </div>
+            `;
+        }
+
+        // Edit functions
+        function editTask(taskId) {
+            const task = tasks['pre-cutover'].find(t => t.id === taskId) || 
+                         tasks['during-cutover'].find(t => t.id === taskId);
+            
+            if (task) {
+                editingTaskId = taskId;
+                currentPhase = task.phase;
+                
+                document.getElementById('taskModalTitle').textContent = 'Edit Task';
+                document.getElementById('taskSubmitBtn').textContent = 'Update Task';
+                document.getElementById('taskTitle').value = task.title;
+                document.getElementById('taskDescription').value = task.description;
+                document.getElementById('taskAssignee').value = task.assignee || '';
+                document.getElementById('taskPriority').value = task.priority;
+                document.getElementById('taskDueDate').value = task.dueDate;
+                
+                // Populate subtasks
+                const subtaskList = document.getElementById('subtaskList');
+                subtaskList.innerHTML = `
+                    <div class="subtask-input-group">
+                        <input type="text" class="form-input subtask-input" placeholder="Subtask description">
+                        <input type="text" class="form-input assignee-input" placeholder="Assignee (optional)">
+                        <button type="button" class="add-subtask-btn" onclick="addSubtaskToForm()">Add</button>
+                    </div>
+                `;
+                
+                task.subtasks.forEach(subtask => {
+                    const subtaskDiv = document.createElement('div');
+                    subtaskDiv.className = 'subtask';
+                    subtaskDiv.innerHTML = `
+                        <input type="checkbox" class="subtask-checkbox" ${subtask.completed ? 'checked' : ''} disabled>
+                        <span class="subtask-text">${subtask.text}</span>
+                        <span class="subtask-assignee">${subtask.assignee || 'Inherited from main task'}</span>
+                        <button class="subtask-delete-btn" onclick="removeSubtaskFromForm(this)">✕</button>
+                    `;
+                    subtaskList.insertBefore(subtaskDiv, subtaskList.firstChild);
+                });
+                
+                document.getElementById('addTaskModal').style.display = 'block';
+            }
+        }
+
+        function editMilestone(milestoneId) {
+            const milestone = milestones.find(m => m.id === milestoneId);
+            
+            if (milestone) {
+                editingMilestoneId = milestoneId;
+                document.getElementById('milestoneModalTitle').textContent = 'Edit Milestone';
+                document.getElementById('milestoneSubmitBtn').textContent = 'Update Milestone';
+                document.getElementById('milestoneTitle').value = milestone.title;
+                document.getElementById('milestoneDescription').value = milestone.description;
+                document.getElementById('milestoneDate').value = milestone.date;
+                document.getElementById('milestoneType').value = milestone.type;
+                
+                document.getElementById('addMilestoneModal').style.display = 'block';
+            }
+        }
+
+        function editNote(noteId) {
+            const note = notes['pre-cutover'].find(n => n.id === noteId) || 
+                        notes['during-cutover'].find(n => n.id === noteId);
+            
+            if (note) {
+                editingNoteId = noteId;
+                currentNotePhase = note.phase;
+                document.getElementById('noteModalTitle').textContent = 'Edit Note';
+                document.getElementById('noteSubmitBtn').textContent = 'Update Note';
+                document.getElementById('noteTitle').value = note.title;
+                document.getElementById('noteContent').value = note.content;
+                
+                document.getElementById('addNoteModal').style.display = 'block';
+            }
+        }
+
+        // Delete functions
+        async function deleteTask(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                // Delete from Firebase
+                const success = await deleteTaskFromFirebase(taskId);
+                
+                // Delete from local state regardless (for demo purposes)
+                tasks['pre-cutover'] = tasks['pre-cutover'].filter(t => t.id !== taskId);
+                tasks['during-cutover'] = tasks['during-cutover'].filter(t => t.id !== taskId);
+                
+                applyCurrentFiltersAndRender();
+                populateAssigneeFilters();
+                
+                if (!success) {
+                    console.warn('Task deleted locally but may not have been removed from database');
+                }
+            }
+        }
+
+        async function deleteMilestone(milestoneId) {
+            if (confirm('Are you sure you want to delete this milestone?')) {
+                // Delete from Firebase
+                const success = await deleteMilestoneFromFirebase(milestoneId);
+                
+                // Delete from local state regardless (for demo purposes)
+                milestones = milestones.filter(m => m.id !== milestoneId);
+                
+                renderMilestones();
+                renderTimelines();
+                
+                if (!success) {
+                    console.warn('Milestone deleted locally but may not have been removed from database');
+                }
+            }
+        }
+
+        async function deleteNote(noteId) {
+            if (confirm('Are you sure you want to delete this note?')) {
+                // Delete from Firebase
+                const success = await deleteNoteFromFirebase(noteId);
+                
+                // Delete from local state regardless (for demo purposes)
+                notes['pre-cutover'] = notes['pre-cutover'].filter(n => n.id !== noteId);
+                notes['during-cutover'] = notes['during-cutover'].filter(n => n.id !== noteId);
+                
+                renderNotes();
+                
+                if (!success) {
+                    console.warn('Note deleted locally but may not have been removed from database');
+                }
+            }
+        }
+
+        // Add subtask to form
+        function addSubtaskToForm() {
+            const subtaskList = document.getElementById('subtaskList');
+            const inputs = subtaskList.querySelector('.subtask-input-group');
+            const subtaskText = inputs.querySelector('.subtask-input').value;
+            const assignee = inputs.querySelector('.assignee-input').value;
+
+            if (subtaskText.trim()) {
+                const subtaskDiv = document.createElement('div');
+                subtaskDiv.className = 'subtask';
+                subtaskDiv.innerHTML = `
+                    <input type="checkbox" class="subtask-checkbox" disabled>
+                    <span class="subtask-text">${subtaskText}</span>
+                    <span class="subtask-assignee">${assignee || 'Inherit from main task'}</span>
+                    <button class="subtask-delete-btn" onclick="removeSubtaskFromForm(this)">✕</button>
+                `;
+
+                subtaskList.insertBefore(subtaskDiv, inputs);
+                inputs.querySelector('.subtask-input').value = '';
+                inputs.querySelector('.assignee-input').value = '';
+            }
+        }
+
+        // Remove subtask from form
+        function removeSubtaskFromForm(button) {
+            button.parentElement.remove();
+        }
+
+        // Handle task form submission
+        document.getElementById('addTaskForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('taskTitle').value;
+            const description = document.getElementById('taskDescription').value;
+            const assignee = document.getElementById('taskAssignee').value;
+            const priority = document.getElementById('taskPriority').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+
+            // Collect subtasks
+            const subtasks = [];
+            const subtaskElements = document.getElementById('subtaskList').querySelectorAll('.subtask');
+            subtaskElements.forEach(element => {
+                const text = element.querySelector('.subtask-text').textContent;
+                const assigneeText = element.querySelector('.subtask-assignee').textContent;
+                const subtaskAssignee = assigneeText === 'Inherit from main task' ? '' : assigneeText;
+                
+                subtasks.push({
+                    text: text,
+                    assignee: subtaskAssignee,
+                    completed: false
+                });
+            });
+
+            if (editingTaskId) {
+                // Update existing task
+                const task = tasks['pre-cutover'].find(t => t.id === editingTaskId) || 
+                           tasks['during-cutover'].find(t => t.id === editingTaskId);
+                
+                if (task) {
+                    task.title = title;
+                    task.description = description;
+                    task.assignee = assignee;
+                    task.priority = priority;
+                    task.dueDate = dueDate;
+                    task.subtasks = subtasks;
+                    
+                    // Save to Firebase
+                    await saveTask(task);
+                }
+            } else {
+                // Create new task
+                const newTask = {
+                    id: 'new', // Will be replaced by Firebase ID
+                    title: title,
+                    description: description,
+                    assignee: assignee,
+                    phase: currentPhase,
+                    priority: priority,
+                    dueDate: dueDate,
+                    status: 'not-started',
+                    subtasks: subtasks,
+                    createdAt: new Date()
+                };
+
+                // Save to Firebase
+                const success = await saveTask(newTask);
+                
+                if (success) {
+                    // Add to local state with the new Firebase ID
+                    tasks[currentPhase].push(newTask);
+                } else {
+                    // For demo purposes, add to local state anyway with a timestamp ID
+                    newTask.id = Date.now().toString();
+                    tasks[currentPhase].push(newTask);
+                }
+            }
+
+            applyCurrentFiltersAndRender();
+            populateAssigneeFilters();
+            closeModal('addTaskModal');
+        });
+
+        // Handle milestone form submission
+        document.getElementById('addMilestoneForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('milestoneTitle').value;
+            const description = document.getElementById('milestoneDescription').value;
+            const date = document.getElementById('milestoneDate').value;
+            const type = document.getElementById('milestoneType').value;
+
+            if (editingMilestoneId) {
+                // Update existing milestone
+                const milestone = milestones.find(m => m.id === editingMilestoneId);
+                if (milestone) {
+                    milestone.title = title;
+                    milestone.description = description;
+                    milestone.date = date;
+                    milestone.type = type;
+                    
+                    // Save to Firebase
+                    await saveMilestone(milestone);
+                }
+            } else {
+                // Create new milestone
+                const newMilestone = {
+                    id: 'new', // Will be replaced by Firebase ID
+                    title: title,
+                    description: description,
+                    date: date,
+                    type: type
+                };
+
+                // Save to Firebase
+                const success = await saveMilestone(newMilestone);
+                
+                if (success) {
+                    // Add to local state with the new Firebase ID
+                    milestones.push(newMilestone);
+                } else {
+                    // For demo purposes, add to local state anyway with a timestamp ID
+                    newMilestone.id = Date.now().toString();
+                    milestones.push(newMilestone);
+                }
+            }
+
+            renderMilestones();
+            renderTimelines();
+            closeModal('addMilestoneModal');
+        });
+
+        // Handle note form submission
+        document.getElementById('addNoteForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('noteTitle').value;
+            const content = document.getElementById('noteContent').value;
+
+            if (editingNoteId) {
+                // Update existing note
+                const note = notes['pre-cutover'].find(n => n.id === editingNoteId) || 
+                           notes['during-cutover'].find(n => n.id === editingNoteId);
+                if (note) {
+                    note.title = title;
+                    note.content = content;
+                    note.timestamp = new Date().toISOString();
+                    
+                    // Save to Firebase
+                    await saveNote(note);
+                }
+            } else {
+                // Create new note
+                const newNote = {
+                    id: 'new', // Will be replaced by Firebase ID
+                    title: title,
+                    content: content,
+                    phase: currentNotePhase,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save to Firebase
+                const success = await saveNote(newNote);
+                
+                if (success) {
+                    // Add to local state with the new Firebase ID
+                    notes[currentNotePhase].push(newNote);
+                } else {
+                    // For demo purposes, add to local state anyway with a timestamp ID
+                    newNote.id = Date.now().toString();
+                    notes[currentNotePhase].push(newNote);
+                }
+            }
+
+            renderNotes();
+            closeModal('addNoteModal');
+        });
+
+        // Utility functions
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return 'No date set';
+            const date = new Date(dateTimeString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function formatDateShort(dateTimeString) {
+            if (!dateTimeString) return '';
+            const date = new Date(dateTimeString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function formatTime(dateTimeString) {
+            if (!dateTimeString) return '';
+            const date = new Date(dateTimeString);
+            return date.toLocaleTimeString('en-US', { 
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                if (event.target.id === 'addTaskModal') {
+                    document.getElementById('addTaskForm').reset();
+                    resetSubtaskList();
+                } else if (event.target.id === 'addMilestoneModal') {
+                    document.getElementById('addMilestoneForm').reset();
+                } else if (event.target.id === 'addNoteModal') {
+                    document.getElementById('addNoteForm').reset();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
