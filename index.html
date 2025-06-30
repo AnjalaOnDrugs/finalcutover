@@ -286,6 +286,225 @@
             gap: 8px;
         }
 
+        /* Process Timeline Styles */
+        .process-timeline-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #86BC25;
+        }
+
+        .process-timeline-section h3 {
+            color: #86BC25;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-scroll-container {
+            overflow-x: auto;
+            overflow-y: visible;
+            padding: 20px 0;
+            margin: 0 -20px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .horizontal-timeline {
+            display: flex;
+            gap: 20px;
+            min-width: max-content;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-entry {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 200px;
+            max-width: 250px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-entry:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #86BC25;
+        }
+
+        .timeline-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .timeline-entry-title {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #495057;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .timeline-entry-flags {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .timeline-flag {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-align: center;
+            min-width: 40px;
+        }
+
+        .timeline-flag.male {
+            background: #007bff;
+            color: white;
+        }
+
+        .timeline-flag.lk {
+            background: #28a745;
+            color: white;
+        }
+
+        .timeline-entry-period {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .timeline-entry-template {
+            font-size: 0.8rem;
+            color: #86BC25;
+            font-weight: bold;
+            background: rgba(134, 188, 37, 0.1);
+            padding: 3px 8px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .timeline-checkboxes {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border: 2px solid #86BC25;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-entry:hover .timeline-checkboxes {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(5px);
+        }
+
+        .timeline-checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            transition: background-color 0.2s ease;
+        }
+
+        .timeline-checkbox-item:hover {
+            background: rgba(134, 188, 37, 0.05);
+            border-radius: 4px;
+            margin: 0 -5px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .timeline-checkbox {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            accent-color: #86BC25;
+        }
+
+        .timeline-checkbox-label {
+            font-size: 0.85rem;
+            color: #495057;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .timeline-entry-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .timeline-entry:hover .timeline-entry-actions {
+            opacity: 1;
+        }
+
+        .timeline-action-btn {
+            background: rgba(108, 117, 125, 0.8);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.7rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-action-btn.edit:hover {
+            background: #007bff;
+        }
+
+        .timeline-action-btn.delete:hover {
+            background: #dc3545;
+        }
+
+        .timeline-scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .timeline-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .timeline-scroll-container::-webkit-scrollbar-thumb {
+            background: #86BC25;
+            border-radius: 4px;
+        }
+
+        .timeline-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #6FA01F;
+        }
+
         .filters-section {
             background: #f8f9fa;
             border-radius: 10px;
@@ -942,6 +1161,18 @@
                         </div>
                     </div>
 
+                    <!-- Process Timeline Section -->
+                    <div class="process-timeline-section">
+                        <h3>Process Timeline 
+                            <button class="add-task-btn" onclick="openAddTimelineEntryModal('pre-cutover')" style="margin-left: 15px; font-size: 0.9rem; padding: 8px 15px;">+ Add Entry</button>
+                        </h3>
+                        <div class="timeline-scroll-container">
+                            <div class="horizontal-timeline" id="pre-cutover-process-timeline">
+                                <!-- Timeline entries will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Filters Section -->
                     <div class="filters-section">
                         <div class="filter-group">
@@ -1020,6 +1251,18 @@
                         <h3>Important Notes <span id="during-cutover-notes-count">0</span></h3>
                         <div id="during-cutover-notes-container">
                             <!-- Notes will be displayed here -->
+                        </div>
+                    </div>
+
+                    <!-- Process Timeline Section -->
+                    <div class="process-timeline-section">
+                        <h3>Process Timeline 
+                            <button class="add-task-btn" onclick="openAddTimelineEntryModal('during-cutover')" style="margin-left: 15px; font-size: 0.9rem; padding: 8px 15px;">+ Add Entry</button>
+                        </h3>
+                        <div class="timeline-scroll-container">
+                            <div class="horizontal-timeline" id="during-cutover-process-timeline">
+                                <!-- Timeline entries will be displayed here -->
+                            </div>
                         </div>
                     </div>
 
@@ -1206,6 +1449,51 @@
         </div>
     </div>
 
+    <!-- Add/Edit Timeline Entry Modal -->
+    <div id="addTimelineEntryModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('addTimelineEntryModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="timelineEntryModalTitle">Add Timeline Entry</h2>
+            </div>
+            <form id="addTimelineEntryForm">
+                <div class="form-group">
+                    <label class="form-label">Entry Name</label>
+                    <input type="text" id="timelineEntryName" class="form-input" required placeholder="Process or activity name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" id="timelineStartDate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" id="timelineEndDate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Region</label>
+                    <select id="timelineRegion" class="form-select" required>
+                        <option value="">Select Region</option>
+                        <option value="male">MALE</option>
+                        <option value="lk">LK</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Template Type</label>
+                    <input type="text" id="timelineTemplate" class="form-input" required placeholder="e.g., Invoice Template, Employee Template">
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addTimelineEntryModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="timelineEntrySubmitBtn">Create Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script>
@@ -1227,9 +1515,11 @@
         // Application state
         let currentPhase = '';
         let currentNotePhase = '';
+        let currentTimelinePhase = '';
         let editingTaskId = null;
         let editingMilestoneId = null;
         let editingNoteId = null;
+        let editingTimelineEntryId = null;
         let tasks = {
             'pre-cutover': [],
             'during-cutover': []
@@ -1240,6 +1530,10 @@
         };
         let milestones = [];
         let notes = {
+            'pre-cutover': [],
+            'during-cutover': []
+        };
+        let timelineEntries = {
             'pre-cutover': [],
             'during-cutover': []
         };
@@ -1255,6 +1549,7 @@
             loadTasks();
             loadMilestones();
             loadNotes();
+            loadTimelineEntries();
             updatePhaseSectionStatuses();
         });
 
@@ -1358,6 +1653,27 @@
             }
         }
 
+        // Load timeline entries from Firebase
+        async function loadTimelineEntries() {
+            try {
+                const snapshot = await db.collection('migrationTimelineEntries').get();
+                timelineEntries = {
+                    'pre-cutover': [],
+                    'during-cutover': []
+                };
+
+                snapshot.forEach(doc => {
+                    const entry = { id: doc.id, ...doc.data() };
+                    timelineEntries[entry.phase].push(entry);
+                });
+
+                renderTimelineEntries();
+            } catch (error) {
+                console.error('Error loading timeline entries:', error);
+                loadSampleTimelineEntries();
+            }
+        }
+
         // Save task to Firebase
         async function saveTask(task) {
             try {
@@ -1406,6 +1722,22 @@
             }
         }
 
+        // Save timeline entry to Firebase
+        async function saveTimelineEntry(entry) {
+            try {
+                if (entry.id && entry.id !== 'new') {
+                    await db.collection('migrationTimelineEntries').doc(entry.id).update(entry);
+                } else {
+                    const docRef = await db.collection('migrationTimelineEntries').add(entry);
+                    entry.id = docRef.id;
+                }
+                return true;
+            } catch (error) {
+                console.error('Error saving timeline entry:', error);
+                return false;
+            }
+        }
+
         // Delete functions
         async function deleteTaskFromFirebase(taskId) {
             try {
@@ -1433,6 +1765,16 @@
                 return true;
             } catch (error) {
                 console.error('Error deleting note:', error);
+                return false;
+            }
+        }
+
+        async function deleteTimelineEntryFromFirebase(entryId) {
+            try {
+                await db.collection('migrationTimelineEntries').doc(entryId).delete();
+                return true;
+            } catch (error) {
+                console.error('Error deleting timeline entry:', error);
                 return false;
             }
         }
@@ -1516,6 +1858,65 @@
             ];
             renderMilestones();
             renderTimelines();
+        }
+
+        // Load sample timeline entries for demonstration
+        function loadSampleTimelineEntries() {
+            timelineEntries = {
+                'pre-cutover': [
+                    {
+                        id: '1',
+                        name: 'Invoice Processing',
+                        startDate: '2025-07-01',
+                        endDate: '2025-07-15',
+                        region: 'male',
+                        template: 'Invoice Template V2.1',
+                        phase: 'pre-cutover',
+                        checkboxes: {
+                            dataExtracted: false,
+                            validationsDone: false,
+                            sentToBUs: false,
+                            templateFilledWithIssues: false,
+                            templateFilledWithoutIssues: false
+                        }
+                    },
+                    {
+                        id: '2',
+                        name: 'Employee Data Migration',
+                        startDate: '2025-07-10',
+                        endDate: '2025-07-20',
+                        region: 'lk',
+                        template: 'Employee Template V1.3',
+                        phase: 'pre-cutover',
+                        checkboxes: {
+                            dataExtracted: true,
+                            validationsDone: true,
+                            sentToBUs: false,
+                            templateFilledWithIssues: false,
+                            templateFilledWithoutIssues: false
+                        }
+                    }
+                ],
+                'during-cutover': [
+                    {
+                        id: '3',
+                        name: 'Final Invoice Reconciliation',
+                        startDate: '2025-07-25',
+                        endDate: '2025-07-26',
+                        region: 'male',
+                        template: 'Reconciliation Template V1.0',
+                        phase: 'during-cutover',
+                        checkboxes: {
+                            dataExtracted: false,
+                            validationsDone: false,
+                            sentToBUs: false,
+                            templateFilledWithIssues: false,
+                            templateFilledWithoutIssues: false
+                        }
+                    }
+                ]
+            };
+            renderTimelineEntries();
         }
 
         // Filtering functions
@@ -1654,6 +2055,74 @@
                 `;
                 milestonesContainer.appendChild(milestoneElement);
             });
+        }
+
+        function renderTimelineEntries() {
+            ['pre-cutover', 'during-cutover'].forEach(phase => {
+                const timelineContainer = document.getElementById(`${phase}-process-timeline`);
+                timelineContainer.innerHTML = '';
+
+                if (timelineEntries[phase].length === 0) {
+                    timelineContainer.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 40px;">No timeline entries added yet</p>';
+                    return;
+                }
+
+                timelineEntries[phase].forEach(entry => {
+                    const entryElement = createTimelineEntryElement(entry);
+                    timelineContainer.appendChild(entryElement);
+                });
+            });
+        }
+
+        function createTimelineEntryElement(entry) {
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'timeline-entry';
+            
+            const periodText = `${formatDateForTimeline(entry.startDate)} - ${formatDateForTimeline(entry.endDate)}`;
+            
+            entryDiv.innerHTML = `
+                <div class="timeline-entry-actions">
+                    <button class="timeline-action-btn edit" onclick="editTimelineEntry('${entry.id}')" title="Edit">✏️</button>
+                    <button class="timeline-action-btn delete" onclick="deleteTimelineEntry('${entry.id}')" title="Delete">🗑️</button>
+                </div>
+                <div class="timeline-entry-header">
+                    <div class="timeline-entry-title">${entry.name}</div>
+                    <div class="timeline-entry-flags">
+                        <div class="timeline-flag ${entry.region}">${entry.region.toUpperCase()}</div>
+                    </div>
+                </div>
+                <div class="timeline-entry-period">${periodText}</div>
+                <div class="timeline-entry-template">${entry.template}</div>
+                <div class="timeline-checkboxes">
+                    <div class="timeline-checkbox-item">
+                        <input type="checkbox" class="timeline-checkbox" ${entry.checkboxes.dataExtracted ? 'checked' : ''} 
+                               onchange="updateTimelineCheckbox('${entry.id}', 'dataExtracted', this.checked)">
+                        <label class="timeline-checkbox-label">Data extracted</label>
+                    </div>
+                    <div class="timeline-checkbox-item">
+                        <input type="checkbox" class="timeline-checkbox" ${entry.checkboxes.validationsDone ? 'checked' : ''} 
+                               onchange="updateTimelineCheckbox('${entry.id}', 'validationsDone', this.checked)">
+                        <label class="timeline-checkbox-label">Validations done</label>
+                    </div>
+                    <div class="timeline-checkbox-item">
+                        <input type="checkbox" class="timeline-checkbox" ${entry.checkboxes.sentToBUs ? 'checked' : ''} 
+                               onchange="updateTimelineCheckbox('${entry.id}', 'sentToBUs', this.checked)">
+                        <label class="timeline-checkbox-label">Sent to BUs</label>
+                    </div>
+                    <div class="timeline-checkbox-item">
+                        <input type="checkbox" class="timeline-checkbox" ${entry.checkboxes.templateFilledWithIssues ? 'checked' : ''} 
+                               onchange="updateTimelineCheckbox('${entry.id}', 'templateFilledWithIssues', this.checked)">
+                        <label class="timeline-checkbox-label">Template filled with Issues</label>
+                    </div>
+                    <div class="timeline-checkbox-item">
+                        <input type="checkbox" class="timeline-checkbox" ${entry.checkboxes.templateFilledWithoutIssues ? 'checked' : ''} 
+                               onchange="updateTimelineCheckbox('${entry.id}', 'templateFilledWithoutIssues', this.checked)">
+                        <label class="timeline-checkbox-label">Template filled without issues</label>
+                    </div>
+                </div>
+            `;
+
+            return entryDiv;
         }
 
         // Render timelines
@@ -1931,6 +2400,19 @@
             document.getElementById('addNoteModal').style.display = 'block';
         }
 
+        function openAddTimelineEntryModal(phase) {
+            // Expand the section if it's not already expanded
+            if (!phaseStates[phase]) {
+                togglePhaseSection(phase);
+            }
+            
+            currentTimelinePhase = phase;
+            editingTimelineEntryId = null;
+            document.getElementById('timelineEntryModalTitle').textContent = 'Add Timeline Entry';
+            document.getElementById('timelineEntrySubmitBtn').textContent = 'Create Entry';
+            document.getElementById('addTimelineEntryModal').style.display = 'block';
+        }
+
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
             if (modalId === 'addTaskModal') {
@@ -1940,6 +2422,8 @@
                 document.getElementById('addMilestoneForm').reset();
             } else if (modalId === 'addNoteModal') {
                 document.getElementById('addNoteForm').reset();
+            } else if (modalId === 'addTimelineEntryModal') {
+                document.getElementById('addTimelineEntryForm').reset();
             }
         }
 
@@ -2043,6 +2527,30 @@
             }
         }
 
+        function editTimelineEntry(entryId) {
+            const entry = timelineEntries['pre-cutover'].find(e => e.id === entryId) || 
+                         timelineEntries['during-cutover'].find(e => e.id === entryId);
+            
+            if (entry) {
+                // Expand the section if it's not already expanded
+                if (!phaseStates[entry.phase]) {
+                    togglePhaseSection(entry.phase);
+                }
+                
+                editingTimelineEntryId = entryId;
+                currentTimelinePhase = entry.phase;
+                document.getElementById('timelineEntryModalTitle').textContent = 'Edit Timeline Entry';
+                document.getElementById('timelineEntrySubmitBtn').textContent = 'Update Entry';
+                document.getElementById('timelineEntryName').value = entry.name;
+                document.getElementById('timelineStartDate').value = entry.startDate;
+                document.getElementById('timelineEndDate').value = entry.endDate;
+                document.getElementById('timelineRegion').value = entry.region;
+                document.getElementById('timelineTemplate').value = entry.template;
+                
+                document.getElementById('addTimelineEntryModal').style.display = 'block';
+            }
+        }
+
         // Delete functions
         async function deleteTask(taskId) {
             if (confirm('Are you sure you want to delete this task?')) {
@@ -2096,6 +2604,23 @@
             }
         }
 
+        async function deleteTimelineEntry(entryId) {
+            if (confirm('Are you sure you want to delete this timeline entry?')) {
+                // Delete from Firebase
+                const success = await deleteTimelineEntryFromFirebase(entryId);
+                
+                // Delete from local state regardless (for demo purposes)
+                timelineEntries['pre-cutover'] = timelineEntries['pre-cutover'].filter(e => e.id !== entryId);
+                timelineEntries['during-cutover'] = timelineEntries['during-cutover'].filter(e => e.id !== entryId);
+                
+                renderTimelineEntries();
+                
+                if (!success) {
+                    console.warn('Timeline entry deleted locally but may not have been removed from database');
+                }
+            }
+        }
+
         // Add subtask to form
         function addSubtaskToForm() {
             const subtaskList = document.getElementById('subtaskList');
@@ -2122,6 +2647,19 @@
         // Remove subtask from form
         function removeSubtaskFromForm(button) {
             button.parentElement.remove();
+        }
+
+        // Update timeline checkbox
+        async function updateTimelineCheckbox(entryId, checkboxType, isChecked) {
+            const entry = timelineEntries['pre-cutover'].find(e => e.id === entryId) || 
+                         timelineEntries['during-cutover'].find(e => e.id === entryId);
+            
+            if (entry) {
+                entry.checkboxes[checkboxType] = isChecked;
+                
+                // Save to Firebase
+                await saveTimelineEntry(entry);
+            }
         }
 
         // Handle task form submission
@@ -2293,6 +2831,66 @@
             closeModal('addNoteModal');
         });
 
+        // Handle timeline entry form submission
+        document.getElementById('addTimelineEntryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('timelineEntryName').value;
+            const startDate = document.getElementById('timelineStartDate').value;
+            const endDate = document.getElementById('timelineEndDate').value;
+            const region = document.getElementById('timelineRegion').value;
+            const template = document.getElementById('timelineTemplate').value;
+
+            if (editingTimelineEntryId) {
+                // Update existing entry
+                const entry = timelineEntries['pre-cutover'].find(e => e.id === editingTimelineEntryId) || 
+                             timelineEntries['during-cutover'].find(e => e.id === editingTimelineEntryId);
+                if (entry) {
+                    entry.name = name;
+                    entry.startDate = startDate;
+                    entry.endDate = endDate;
+                    entry.region = region;
+                    entry.template = template;
+                    
+                    // Save to Firebase
+                    await saveTimelineEntry(entry);
+                }
+            } else {
+                // Create new entry
+                const newEntry = {
+                    id: 'new', // Will be replaced by Firebase ID
+                    name: name,
+                    startDate: startDate,
+                    endDate: endDate,
+                    region: region,
+                    template: template,
+                    phase: currentTimelinePhase,
+                    checkboxes: {
+                        dataExtracted: false,
+                        validationsDone: false,
+                        sentToBUs: false,
+                        templateFilledWithIssues: false,
+                        templateFilledWithoutIssues: false
+                    }
+                };
+
+                // Save to Firebase
+                const success = await saveTimelineEntry(newEntry);
+                
+                if (success) {
+                    // Add to local state with the new Firebase ID
+                    timelineEntries[currentTimelinePhase].push(newEntry);
+                } else {
+                    // For demo purposes, add to local state anyway with a timestamp ID
+                    newEntry.id = Date.now().toString();
+                    timelineEntries[currentTimelinePhase].push(newEntry);
+                }
+            }
+
+            renderTimelineEntries();
+            closeModal('addTimelineEntryModal');
+        });
+
         // Utility functions
         function formatDateTime(dateTimeString) {
             if (!dateTimeString) return 'No date set';
@@ -2312,6 +2910,16 @@
             return date.toLocaleDateString('en-US', { 
                 month: 'short', 
                 day: 'numeric' 
+            });
+        }
+
+        function formatDateForTimeline(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
             });
         }
 
@@ -2335,6 +2943,8 @@
                     document.getElementById('addMilestoneForm').reset();
                 } else if (event.target.id === 'addNoteModal') {
                     document.getElementById('addNoteForm').reset();
+                } else if (event.target.id === 'addTimelineEntryModal') {
+                    document.getElementById('addTimelineEntryForm').reset();
                 }
             }
         }
